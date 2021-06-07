@@ -9,7 +9,6 @@ from psutil import virtual_memory
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.optim as optim
 
 from core.dataset import dataset_loader
 from core.builder import get_model, get_loss, get_optimizer, get_scheduler
