@@ -80,13 +80,13 @@ checkpoint: ""
 - type : 학습에 사용될 optimizer
 - others : optimizer 생성시 arguments로 전달될 인자
 
-### Scheduler
+### scheduler
 
 *업데이트 필요*
 
 - is_cycle : True일 때 CircularLRBeta, False일 때 StepLR Scheduler로 동작.
 
-### Data
+### data
 
 - train
     - path : 학습에 사용될 ground truth text가 저장된 경로
