@@ -10,5 +10,4 @@ __pycache__/
 .vscode/
 wandb/
 submit/
-data_tools/
 log/
