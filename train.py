@@ -228,7 +228,7 @@ def main(config_file):
         if valid_score > best_score:
             best_score = valid_score
             save_checkpoint(ckpt, dir=".", prefix=config.prefix, base_name="best_score")
-            # wandb.save(glob_str=os.path.join(config.prefix, "best_score.pth"))
+            wandb.save(glob_str=os.path.join(config.prefix, "best_score.pth"))
             print()
             print(f'...Best Score Update! Epoch {epoch_i + 1}...')
             print()
