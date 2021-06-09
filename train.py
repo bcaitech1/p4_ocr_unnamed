@@ -93,7 +93,8 @@ def main(config_file):
         model.load_state_dict(ckpt["model_state"])
     model.train()
 
-    criterion = get_loss(config)
+    # ignore index
+    criterion = get_loss(config, ignore_index=tokenizer.token_to_id[tokenizer.END_TOKEN])
     params_to_optimise = [param for param in model.parameters() if param.requires_grad]
     print(
         "[+] Model\n",
@@ -101,24 +102,17 @@ def main(config_file):
         f"Model parameters: {format(sum(p.numel() for p in params_to_optimise), ',')}\n",
     )
     print("[+] Loss")
-    loss_config = config.loss._asdict()
-    loss_type = loss_config.pop("type")
-    print(f" type: {loss_type}")
-    for k, v in loss_config.items():
+    for k, v in config.loss._asdict().items():
         print(f" {k}: {v}")
     print()
 
     # get optimizer
     optimizer = get_optimizer(config, params_to_optimise)
     if ckpt["optim_state"]:
-        optimizer.load_state_dict(ckpt["optim_state"])
-    # for param_group in optimizer.param_groups:
-    #     param_group["initial_lr"] = config.optimizer.lr
+        optimizer.load_state_dict(ckpt["optim_state"])   
+        
     print("[+] Optimizer")
-    optim_config = config.optimizer._asdict()
-    optim_type = optim_config.pop("type")
-    print(f" type: {optim_type}")
-    for k, v in optim_config.items():
+    for k, v in config.optimizer._asdict().items():
         print(f" {k}: {v}")
     print()
 
@@ -126,10 +120,7 @@ def main(config_file):
     scheduler = get_scheduler(config, optimizer)
     if scheduler:
         print("[+] Scheduler")
-        scheduler_config = config.scheduler._asdict()
-        scheduler_type = scheduler_config.pop("type")
-        print(f" type: {scheduler_type}")
-        for k, v in scheduler_config.items():
+        for k, v in config.scheduler._asdict().items():
             print(f" {k}: {v}")
         print()
 
@@ -229,6 +220,9 @@ def main(config_file):
             best_score = valid_score
             save_checkpoint(ckpt, dir=".", prefix=config.prefix, base_name="best_score")
             wandb.save(glob_str=os.path.join(config.prefix, "best_score.pth"))
+            print()
+            print(f'...Best Score Update! Epoch {epoch_i + 1}...')
+            print()
 
         # log write.
         elapsed_time = time.time() - start_time
@@ -240,7 +234,7 @@ def main(config_file):
                 f"Train Symbol Accuracy = {train_symbol_acc:.4f}, "
                 f"Train Sentence Accuracy = {train_sent_acc:.4f}, "
                 f"Train WER = {train_wer:.4f}, "
-                f"Train Score = {valid_score:.4f}, "
+                f"Train Score = {valid_score:.4f}"
                 f"Valid Loss = {valid_loss:.4f}, "
                 f"Valid Symbol Accuracy = {valid_symbol_acc:.4f}, "
                 f"Valid Sentence Accuracy = {valid_sent_acc:.4f}, "

@@ -1,22 +1,20 @@
 # models
-from .build.model import Baseline_Attention
-from .build.model import Baseline_SATRN
+from .build.model import Attention
+from .build.model import SATRN
 
 # losses
 from torch.nn import CrossEntropyLoss
 
 # optimizers
-from torch.optim import SGD, Adam, adadelta
+from torch.optim import SGD, Adam, adadelta, AdamW
 
 # schedulers
 from torch.optim.lr_scheduler import StepLR
 from .build.scheduler import CircularLRBeta
-from .build.scheduler import get_cosine_schedule_with_warmup
-from .build.scheduler import get_cosine_with_hard_restarts_schedule_with_warmup
 
 model_list = {
-    "Baseline_Attention": Baseline_Attention,
-    "Baseline_SATRN": Baseline_SATRN,
+    "Attention": Attention,
+    "SATRN": SATRN,
 }
 
 loss_list = {
@@ -27,12 +25,11 @@ optim_list = {
     "SGD": SGD,
     "Adam": Adam,
     "adadelta": adadelta,
+    "AdamW": AdamW,
 }
 
 iter_scheduler_list = {
     "CircularLRBeta": CircularLRBeta,
-    "get_cosine_schedule_with_warmup": get_cosine_schedule_with_warmup,
-    "get_cosine_with_hard_restarts_schedule_with_warmup": get_cosine_with_hard_restarts_schedule_with_warmup,
 }
 epoch_scheduler_list = {
     "StepLR": StepLR,
@@ -52,7 +49,6 @@ def get_model(config, tokenizer, *args, **kwagrs):
 
 def get_loss(config, *args, **kwagrs):
     loss_name = config.loss.type
-
     if loss_name in loss_list:
         loss_fn = loss_list[loss_name](*args, **kwagrs)
     else:
