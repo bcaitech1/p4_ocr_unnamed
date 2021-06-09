@@ -42,7 +42,6 @@ epoch_scheduler_list = {
 
 def get_model(config, tokenizer, *args, **kwagrs):
     model_name = config.model.type
-    print(model_name)
 
     if model_name in model_list:
         model = model_list[model_name](config, tokenizer)
