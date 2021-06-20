@@ -184,7 +184,7 @@ class TransformerEncoder(nn.Module):
         super(TransformerEncoder, self).__init__()
 
         # self.shallow_cnn = Shallow_cnn(in_channels=in_channels, hidden_dim=hidden_dim)
-        self.shallow_cnn = DeepCNN300(in_channels, num_in_features=48, hidden_dim=hidden_dim, dropout=dropout,)
+        # self.shallow_cnn = DeepCNN300(in_channels, num_in_features=48, hidden_dim=hidden_dim, dropout=dropout,)
         self.shallow_cnn = efficientnet_backbone(in_channels, hidden_dim, dropout)
         self.pos_encoder = Adaptive2DPositionEncoder(in_channels=hidden_dim, max_h=max_h, max_w=max_w, dropout=dropout)
 
